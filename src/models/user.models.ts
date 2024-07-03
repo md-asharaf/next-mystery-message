@@ -33,27 +33,29 @@ const UserSchema: Schema<IUser> = new Schema({
     },
     verifyCode: {
         type: String,
-        required: [true, "Please fill a valid verify code"],
+        default: Math.floor(100000 + Math.random() * 900000).toString(),
     },
     verifyCodeExpires: {
         type: Date,
-        required: [true, "Please fill a valid verify code expires"],
+        default: new Date(Date.now() + 3600000),
     },
     isVerified: {
         type: Boolean,
-        required: true,
         default: false,
     },
     isAcceptingMessage: {
         type: Boolean,
         default: true,
     },
-    messages: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Message",
-        },
-    ],
+    messages: {
+        type: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Message",
+            },
+        ],
+        default: [],
+    },
 });
 
 export default (models.User as Model<IUser>) ||

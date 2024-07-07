@@ -1,12 +1,12 @@
 import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/user.models";
 import NextAuth, { NextAuthResult } from "next-auth";
-import credentials from "next-auth/providers/credentials";
+import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth }: NextAuthResult = NextAuth({
     providers: [
-        credentials({
+        Credentials({
             name: "Credentials",
             credentials: {
                 email: { label: "Email", type: "email" },
@@ -18,8 +18,8 @@ export const { handlers, signIn, signOut, auth }: NextAuthResult = NextAuth({
                     const user = await userModel.findOne({
                         email,
                     });
-                    const isPasswordCorrect = bcrypt.compare(
-                        password,
+                    const isPasswordCorrect = await bcrypt.compare(
+                        password as string,
                         user?.password || ""
                     );
                     return isPasswordCorrect ? user : null;

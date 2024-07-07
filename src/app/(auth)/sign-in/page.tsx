@@ -1,20 +1,15 @@
-// import { signIn } from "@/app/api/auth/[...nextauth]/auth";
-
-// export default function SignIn() {
-//     return (
-//         <form
-//             action={async () => {
-//                 "use server";
-//                 await signIn();
-//             }}
-//         >
-//             <button type="submit">Sign in</button>
-//         </form>
-//     );
-// }
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, signOut, auth } from "@/app/api/auth/[...nextauth]/auth";
 
-export default function SignIn() {
+export default async function SignIn() {
+    const session = await auth();
+    if (session) {
+        return (
+            <div>
+                <h1>{session.user?.name} is signed in</h1>
+                <button onClick={() => signOut()}>Sign out</button>
+            </div>
+        );
+    }
     return <button onClick={() => signIn()}>Sign In</button>;
 }

@@ -3,7 +3,11 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function authMiddleware(req: NextRequest) {
-    const token = await getToken({ req });
+    const token = await getToken({
+        req,
+        salt: "10",
+        secret: process.env.NEXT_AUTH_SECRET,
+    });
     const url = req.nextUrl;
     if (
         token &&

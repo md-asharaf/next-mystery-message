@@ -12,9 +12,9 @@ const MessageSchema: Schema<IMessage> = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
+        default: new Date(),
     },
 });
 
-export default (models.Message as Model<IMessage>) ||
+export default (models?.Message as Model<IMessage>) ||
     model<IMessage>("Message", MessageSchema);

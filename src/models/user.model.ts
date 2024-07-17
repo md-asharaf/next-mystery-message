@@ -1,5 +1,5 @@
 import { Schema, Document, model, models, Model } from "mongoose";
-import { IMessage } from "./message.models";
+import { IMessage } from "./message.model";
 
 export interface IUser extends Document {
     username: string;
@@ -9,7 +9,7 @@ export interface IUser extends Document {
     verifyCodeExpires: Date;
     isVerified: boolean;
     isAcceptingMessage: boolean;
-    messages: IMessage[];
+    messages: Schema.Types.ObjectId[];
 }
 
 const UserSchema: Schema<IUser> = new Schema({
@@ -47,15 +47,7 @@ const UserSchema: Schema<IUser> = new Schema({
         type: Boolean,
         default: true,
     },
-    messages: {
-        type: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Message",
-            },
-        ],
-        default: [],
-    },
+    messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
 });
 
 export default (models?.User as Model<IUser>) ||

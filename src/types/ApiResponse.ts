@@ -1,4 +1,4 @@
-import { IMessage } from "@/models/message.models";
+import { IMessage } from "@/models/message.model";
 
 export interface ApiResponse {
     success: boolean;

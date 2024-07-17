@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import userModel from "@/models/user.models";
+import userModel from "@/models/user.model";
 import { UsernameSchema } from "@/validation/signUpSchema";
 export async function GET(req: Request) {
     await dbConnect();

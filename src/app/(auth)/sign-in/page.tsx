@@ -1,8 +1,9 @@
 "use client";
-import { signIn, signOut, auth } from "@/app/api/auth/[...nextauth]/auth";
+import { signIn, signOut } from "@/app/api/auth/[...nextauth]/auth";
+import { useSession } from "next-auth/react";
 
-export default async function SignIn() {
-    const session = await auth();
+export default function SignIn() {
+    const { data: session } = useSession();
     if (session) {
         return (
             <div>

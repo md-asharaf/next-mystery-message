@@ -1,12 +1,11 @@
-export { auth as middleware } from "./app/api/auth/[...nextauth]/auth";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function authMiddleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
     const token = await getToken({
         req,
         salt: "10",
-        secret: process.env.NEXT_AUTH_SECRET,
+        secret: process.env.NEXTAUTH_SECRET || [],
     });
     const url = req.nextUrl;
     if (
@@ -18,4 +17,5 @@ export async function authMiddleware(req: NextRequest) {
     ) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
+    return NextResponse.next();
 }

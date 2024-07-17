@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import userModel from "@/models/user.models";
+import userModel from "@/models/user.model";
 import { VerifyCodeSchema } from "@/validation/VerifyCodeSchema";
 
 export default async function POST(req: Request) {

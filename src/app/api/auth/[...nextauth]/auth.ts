@@ -1,10 +1,10 @@
 import dbConnect from "@/lib/dbConnect";
-import userModel from "@/models/user.models";
-import NextAuth, { NextAuthResult } from "next-auth";
+import userModel from "@/models/user.model";
+import NextAuth, { NextAuthConfig, NextAuthResult } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-export const { handlers, signIn, signOut, auth }: NextAuthResult = NextAuth({
+export const authOptions: NextAuthConfig = {
     providers: [
         Credentials({
             name: "Credentials",
@@ -47,4 +47,6 @@ export const { handlers, signIn, signOut, auth }: NextAuthResult = NextAuth({
             return token;
         },
     },
-});
+};
+export const { handlers, signIn, signOut, auth }: NextAuthResult =
+    NextAuth(authOptions);

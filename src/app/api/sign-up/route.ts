@@ -28,12 +28,11 @@ export async function POST(req: Request) {
         //if user does not exist or user exists with this username
         if (!existingUser || existingUser.username === username) {
             // create new user and save it to database
-            const newUser = new UserModel({
+            await UserModel.create({
                 username,
                 email,
                 password: hashedPassword,
             });
-            await newUser.save();
         } else {
             // update the existing user
             existingUser.verifyCode = otp;

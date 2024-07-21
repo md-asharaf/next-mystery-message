@@ -2,19 +2,25 @@ import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/user.model";
 import { VerifyCodeSchema } from "@/validation/VerifyCodeSchema";
 
-export default async function POST(req: Request) {
+export async function POST(req: Request) {
     await dbConnect();
     try {
         const { OTP, username } = await req.json();
         const decodedUsername = decodeURIComponent(username);
 
         const existingUser = await userModel.findOne({
-            username: decodedUsername,
+            username,
         });
         if (!existingUser) {
             return Response.json(
-                { success: false, message: "username does not exist" },
+                { success: false, message: "User does not exist" },
                 { status: 400 }
+            );
+        }
+        if (existingUser.isVerified) {
+            return Response.json(
+                { success: false, message: "User already verified" },
+                { status: 300 }
             );
         }
         //validate with zod
@@ -32,12 +38,13 @@ export default async function POST(req: Request) {
         }
         const { code } = result.data;
         const isOTPvalid = code === existingUser.verifyCode;
-        const isCodeExpired = existingUser.verifyCodeExpires > new Date();
+        console.log(existingUser.verifyCodeExpires, "  ", new Date(Date.now()));
+        const isCodeExpired = existingUser.verifyCodeExpires < new Date();
         if (isCodeExpired) {
             return Response.json(
                 {
                     success: false,
-                    message: "expiry code expired,please verify again",
+                    message: "otp expired,please verify again",
                 },
                 { status: 400 }
             );
@@ -50,7 +57,7 @@ export default async function POST(req: Request) {
         existingUser.isVerified = true;
         await existingUser.save();
         return Response.json(
-            { success: true, message: "User verified successfully" },
+            { success: true, message: "User verified successfully!" },
             { status: 200 }
         );
     } catch (error) {

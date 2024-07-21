@@ -19,13 +19,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-const page = () => {
+import Link from "next/link";
+const Page = () => {
     const [username, setUsername] = useState("");
     const [userMessage, setUserMessage] = useState("");
     const [isCheckingUsername, setIsCheckingUsername] = useState(false);
     const debounced = useDebounceCallback(setUsername, 500);
     const router = useRouter();
-    const toast = useToast();
+    const { toast } = useToast();
     const form = useForm<z.infer<typeof SignUpSchema>>({
         resolver: zodResolver(SignUpSchema),
         defaultValues: {
@@ -57,8 +58,22 @@ const page = () => {
         mutationKey: ["sign-up"],
         mutationFn: async (data: z.infer<typeof SignUpSchema>) => {
             console.log(data);
-            const response = await axios.post("/api/sign-up", data);
-            router.push("/sign-up/verify-otp");
+            try {
+                const response = await axios.post("/api/sign-up", data);
+                toast({
+                    title: "Registered",
+                    description:
+                        "Verification email sent,Please check your email",
+                });
+                router.replace(`/verify/${username}`);
+            } catch (error) {
+                if (error instanceof AxiosError) {
+                    toast({
+                        title: "An error occurred",
+                        description: error.response?.data.message,
+                    });
+                }
+            }
         },
     });
     useEffect(() => {
@@ -118,8 +133,12 @@ const page = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
-                                    <Input {...field} name="email" />
-                                    <p className="text-muted text-gray-400 text-sm">
+                                    <Input
+                                        {...field}
+                                        name="email"
+                                        className="peer"
+                                    />
+                                    <p className="peer-focus:block hidden text-sm text-gray-500">
                                         We will send you a verification code
                                     </p>
                                     <FormMessage />
@@ -145,7 +164,7 @@ const page = () => {
                         <Button
                             type="submit"
                             className="w-full"
-                            disabled={isSubmitting}
+                            disabled={isCheckingUsername || isSubmitting}
                         >
                             {isSubmitting ? (
                                 <>
@@ -158,9 +177,20 @@ const page = () => {
                         </Button>
                     </form>
                 </Form>
+                <div className="text-center mt-4">
+                    <p>
+                        Already a member?{" "}
+                        <Link
+                            href="/sign-in"
+                            className="text-blue-600 hover:text-blue-800"
+                        >
+                            Sign in
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );
 };
 
-export default page;
+export default Page;

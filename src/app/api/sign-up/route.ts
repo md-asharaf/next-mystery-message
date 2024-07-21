@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import UserModel from "@/models/user.model";
 import { sendVerificationEmail } from "@/lib/resend";
 
-export default async function POST(req: Request) {
+export async function POST(req: Request) {
     await dbConnect();
     try {
         const { username, email, password } = await req.json();
@@ -44,7 +44,8 @@ export default async function POST(req: Request) {
         //send verification email
         const emailSent = await sendVerificationEmail(email, username, otp);
         //if email sending failed
-        if (!emailSent.success) {
+        if (!emailSent?.success) {
+            console.log("Error in sending email: ", emailSent?.message);
             // send failed response
             return Response.json(
                 { success: false, message: emailSent.message },

@@ -7,8 +7,7 @@ export default function SignIn() {
     if (session) {
         return (
             <div>
-                <h1>{session.user?.name} is signed in</h1>
-                <button onClick={() => signOut()}>Sign out</button>
+                
             </div>
         );
     }

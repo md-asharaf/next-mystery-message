@@ -12,9 +12,7 @@ export async function GET(req: Request) {
             return Response.json(
                 {
                     success: false,
-                    message:
-                        "ERROR in validating with zod:  " +
-                        result?.error.format()._errors.join(", "),
+                    message: result?.error.format()._errors.join(", "),
                 },
                 { status: 400 }
             );
@@ -31,7 +29,7 @@ export async function GET(req: Request) {
             );
         }
         return Response.json(
-            { success: true, message: "Username is available" },
+            { success: true, message: "username is unique" },
             { status: 200 }
         );
     } catch (error) {

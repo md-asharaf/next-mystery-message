@@ -1,27 +1,28 @@
 "use client";
+import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { SignInSchema } from "@/validation/signInSchema";
+import Link from "next/link";
 import {
     Form,
+    FormControl,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import Link from "next/link";
-import { SignInSchema } from "@/validation/signInSchema";
-import { signIn } from "@/app/api/auth/[...nextauth]/auth";
+import { signInHelper } from "./helper";
 const Page = () => {
     const router = useRouter();
     const { toast } = useToast();
-    const form = useForm<z.infer<typeof SignInSchema>>({
+    const register = useForm<z.infer<typeof SignInSchema>>({
         resolver: zodResolver(SignInSchema),
         defaultValues: {
             email: "",
@@ -29,26 +30,10 @@ const Page = () => {
         },
     });
     const { mutate: onSubmit, isPending: isSubmitting } = useMutation({
-        mutationKey: ["sign-up"],
+        mutationKey: ["sign-in"],
         mutationFn: async (data: z.infer<typeof SignInSchema>) => {
-            console.log(data);
-            ("use server");
-            const result = await signIn("credentials", {
-                redirect: false,
-                email: data.email,
-                password: data.password,
-            });
-            console.log("login response", result);
-            if (result?.error) {
-                toast({
-                    title: "Login failed",
-                    description: result.error,
-                });
-                return;
-            }
-            if (result?.url) {
-                router.push("/");
-            }
+            const response = await signInHelper(data);
+            console.log("response ", response);
         },
     });
     return (
@@ -62,22 +47,27 @@ const Page = () => {
                         sign in to start your anonymous adventure
                     </p>
                 </div>
-                <Form {...form}>
+                <Form {...register}>
                     <form
-                        onSubmit={form.handleSubmit((data) => onSubmit(data))}
+                        onSubmit={register.handleSubmit((data) =>
+                            onSubmit(data)
+                        )}
                         className="space-y-6"
                     >
                         <FormField
                             name="email"
-                            control={form.control}
+                            control={register.control}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
-                                    <Input
-                                        {...field}
-                                        name="email"
-                                        className="peer"
-                                    />
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            name="email"
+                                            className="peer"
+                                        />
+                                    </FormControl>
+
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -85,15 +75,17 @@ const Page = () => {
 
                         <FormField
                             name="password"
-                            control={form.control}
+                            control={register.control}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
-                                    <Input
-                                        type="password"
-                                        {...field}
-                                        name="password"
-                                    />
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            {...field}
+                                            name="password"
+                                        />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -101,7 +93,7 @@ const Page = () => {
                         <Button
                             type="submit"
                             className="w-full"
-                            disabled={isSubmitting}
+                            // disabled={isSubmitting}
                         >
                             {isSubmitting ? (
                                 <>

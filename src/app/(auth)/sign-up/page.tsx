@@ -113,7 +113,7 @@ const Page = () => {
                                     )}
                                     {!isCheckingUsername && userMessage && (
                                         <p
-                                            className={`text-sm ${
+                                            className={`text-s.min(6, "Password must be at least 6 characters long")m ${
                                                 userMessage ===
                                                 "username is unique"
                                                     ? "text-green-500"

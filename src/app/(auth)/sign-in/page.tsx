@@ -18,8 +18,10 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { signInHelper } from "./helper";
-const Page = () => {
+import { signInHelper } from "../../../lib/auth_helpers";
+import { AuthError } from "next-auth";
+
+export default function SignIn(){
     const router = useRouter();
     const { toast } = useToast();
     const register = useForm<z.infer<typeof SignInSchema>>({
@@ -29,12 +31,27 @@ const Page = () => {
             password: "",
         },
     });
+
+    const signin=async (data: z.infer<typeof SignInSchema>) => {
+        try {
+            await signInHelper(data);
+            console.log("successfully logged in")
+            router.replace("/dashboard");
+        } catch (error:any) {
+            if(error instanceof AuthError){
+                console.log("AUTH ERROR: ",error.constructor.name)
+            }else{
+                console.log("ERROR: ",error.constructor.name)
+            }
+            toast({
+                title: "Sign in failed",
+                description: error.message,
+            })
+        }
+    }
     const { mutate: onSubmit, isPending: isSubmitting } = useMutation({
         mutationKey: ["sign-in"],
-        mutationFn: async (data: z.infer<typeof SignInSchema>) => {
-            const response = await signInHelper(data);
-            console.log("response ", response);
-        },
+        mutationFn: signin,
     });
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-800">
@@ -121,5 +138,3 @@ const Page = () => {
         </div>
     );
 };
-
-export default Page;

@@ -1,3 +1,4 @@
+"use client";
 import { X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -23,9 +24,14 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, onDelete }) => {
     const { toast } = useToast();
     const deleteMessage = async () => {
         try {
-            const response = await axios.delete(
+            await axios.delete(
                 `/api/delete-message/${message.id}`
             );
+            toast({
+                title: "Message deleted",
+                description: "Message has been deleted successfully",
+            });
+            onDelete(message.id);
         } catch (error) {}
     };
     return (

@@ -1,10 +1,21 @@
+"use client"
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { auth, signOut } from "@/app/api/auth/[...nextauth]/auth";
-
-const NavBar = async () => {
-    const session = await auth();
-    console.log("user ", session?.user || "user does not exist");
+import {useRouter} from "next/navigation"
+import { signOutHelper } from "@/lib/auth_helpers";
+import { useSession } from "next-auth/react";
+export default function NavBar(){
+    const router=useRouter();
+    const {data:session} = useSession();
+    console.log("user ", session?.user || "does not exist");
+    const signout = async () => {
+        try {
+            await signOutHelper();
+            router.replace("/sign-in");
+        } catch (error:any) {
+            console.log("Error ", error.message);
+        }
+    }
     return (
         <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white">
             <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
@@ -14,10 +25,10 @@ const NavBar = async () => {
                 {session ? (
                     <>
                         <span className="mr-4">
-                            Welcome, {session.user?.username}
+                            Welcome, {session?.user?.username}
                         </span>
                         <Button
-                            onClick={() => signOut()}
+                            onClick={signout}
                             className="w-full md:w-auto bg-slate-100 text-black"
                             variant="outline"
                         >
@@ -38,5 +49,3 @@ const NavBar = async () => {
         </nav>
     );
 };
-
-export default NavBar;

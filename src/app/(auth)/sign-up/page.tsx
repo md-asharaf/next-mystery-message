@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-const Page = () => {
+export default function SignUp(){
     const [username, setUsername] = useState("");
     const [userMessage, setUserMessage] = useState("");
     const [isCheckingUsername, setIsCheckingUsername] = useState(false);
@@ -59,7 +59,7 @@ const Page = () => {
         mutationFn: async (data: z.infer<typeof SignUpSchema>) => {
             console.log(data);
             try {
-                const response = await axios.post("/api/sign-up", data);
+                await axios.post("/api/sign-up", data);
                 toast({
                     title: "Registered",
                     description:
@@ -192,5 +192,3 @@ const Page = () => {
         </div>
     );
 };
-
-export default Page;

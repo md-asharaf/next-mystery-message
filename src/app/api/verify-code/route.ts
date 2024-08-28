@@ -6,7 +6,6 @@ export async function POST(req: Request) {
     await dbConnect();
     try {
         const { OTP, username } = await req.json();
-        const decodedUsername = decodeURIComponent(username);
 
         const existingUser = await userModel.findOne({
             username,
@@ -38,8 +37,7 @@ export async function POST(req: Request) {
         }
         const { code } = result.data;
         const isOTPvalid = code === existingUser.verifyCode;
-        console.log(existingUser.verifyCodeExpires, "  ", new Date(Date.now()));
-        const isCodeExpired = existingUser.verifyCodeExpires < new Date();
+        const isCodeExpired = existingUser.verifyCodeExpires < new Date(Date.now());
         if (isCodeExpired) {
             return Response.json(
                 {

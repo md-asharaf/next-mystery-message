@@ -13,9 +13,9 @@ export async function POST(req: Request) {
             { status: 401 }
         );
     }
-    const userId = user.id;
-    const { acceptMessages } = await req.json();
-    const result = AcceptMessageSchema.safeParse({ acceptMessages });
+    const userId = user._id;
+    const { acceptMessage } = await req.json();
+    const result = AcceptMessageSchema.safeParse({ acceptMessage });
     if (!result.success) {
         return Response.json(
             {
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         const updatedUser = await userModel.findByIdAndUpdate(
             userId,
             {
-                isAcceptingMessage: result.data.acceptMessages,
+                isAcceptingMessages: result.data.acceptMessage,
             },
             { new: true }
         );
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         return Response.json(
             {
                 success: true,
-                message: "User updated successfully",
+                message: "Message settings updated successfully",
                 user: updatedUser,
             },
             { status: 200 }
@@ -74,7 +74,7 @@ export async function GET(req: Request) {
             { status: 401 }
         );
     }
-    const userId = user.id;
+    const userId = user._id;
     try {
         const user = await userModel.findById(userId);
         if (!user) {
@@ -90,7 +90,7 @@ export async function GET(req: Request) {
             {
                 success: true,
                 message: "fetched isAcceptingMessage successfully",
-                isAcceptingMessage: user.isAcceptingMessage,
+                isAcceptingMessages: user.isAcceptingMessages,
             },
             { status: 200 }
         );

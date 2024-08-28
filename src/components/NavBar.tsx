@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 export default function NavBar(){
     const router=useRouter();
     const {data:session} = useSession();
-    console.log("user ", session?.user || "does not exist");
+    const user=session?.user;
     const signout = async () => {
         try {
             await signOutHelper();
@@ -17,24 +17,19 @@ export default function NavBar(){
         }
     }
     return (
-        <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white">
-            <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white fixed w-full top-0 h-20">
+            <div className="container mx-auto flex justify-between items-center">
                 <a href="#" className="text-xl font-bold mb-4 md:mb-0">
                     Mystery Message
                 </a>
-                {session ? (
-                    <>
-                        <span className="mr-4">
-                            Welcome, {session?.user?.username}
-                        </span>
+                {user ? (
                         <Button
                             onClick={signout}
-                            className="w-full md:w-auto bg-slate-100 text-black"
+                            className="w-auto bg-slate-100 text-black"
                             variant="outline"
                         >
                             Sign out
                         </Button>
-                    </>
                 ) : (
                     <Link href="/sign-in">
                         <Button

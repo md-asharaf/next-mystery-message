@@ -24,6 +24,7 @@ export async function POST(req: Request) {
         }
         //generate otp and hashed password
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpExpiry = new Date(Date.now() + 3600000);
         const hashedPassword = await bcrypt.hash(password, 10);
         //if user does not exist or user exists with this username
         if (!existingUser || existingUser.username === username) {
@@ -32,12 +33,14 @@ export async function POST(req: Request) {
                 username,
                 email,
                 password: hashedPassword,
+                verifyCode: otp,
+                verifyCodeExpires: otpExpiry,
             });
         } else {
             // update the existing user
             existingUser.verifyCode = otp;
             existingUser.password = hashedPassword;
-            existingUser.verifyCodeExpires = new Date(Date.now() + 3600000);
+            existingUser.verifyCodeExpires = otpExpiry;
             await existingUser.save();
         }
         //send verification email

@@ -35,17 +35,12 @@ export default function SignIn(){
     const signin=async (data: z.infer<typeof SignInSchema>) => {
         try {
             await signInHelper(data);
-            console.log("successfully logged in")
             router.replace("/dashboard");
         } catch (error:any) {
-            if(error instanceof AuthError){
-                console.log("AUTH ERROR: ",error.constructor.name)
-            }else{
-                console.log("ERROR: ",error.constructor.name)
-            }
+            console.log("ERROR: ",error)
             toast({
                 title: "Sign in failed",
-                description: error.message,
+                description: error instanceof AuthError ? error.message : "wrong credentials,check your email and password",
             })
         }
     }

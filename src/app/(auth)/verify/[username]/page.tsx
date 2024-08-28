@@ -20,7 +20,7 @@ const Page = () => {
     const verifyOtp = async () => {
         setRes({ success: false, message: "" });
         try {
-            const response = await axios.post(`/api/verify-code`, {
+            await axios.post(`/api/verify-code`, {
                 username,
                 OTP,
             });

@@ -1,12 +1,21 @@
 import dbConnect from "@/lib/dbConnect";
 import messageModel from "@/models/message.model";
+import { auth } from "../../auth/[...nextauth]/auth";
+import userModel from "@/models/user.model";
 
-export async function DELETE(req: Request) {
+export async function DELETE(req: Request,{params}:{params:{messageId:string}}) {
     await dbConnect();
     try {
-        const { searchParams } = new URL(req.url);
-        const messageId = searchParams.get("messageId");
+        const messageId = params.messageId;
         //check if message exists
+         const session = await auth();
+        const user = session?.user;
+        if (!user) {
+            return Response.json(
+                { success: false, message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
         const existingMessage = await messageModel.findById(messageId);
         if (!existingMessage) {
             return Response.json(
@@ -21,6 +30,9 @@ export async function DELETE(req: Request) {
         }
         //delete message
         await messageModel.findByIdAndDelete(existingMessage._id);
+        await userModel.findByIdAndUpdate(user._id, {
+            $pull: { messages: existingMessage._id },
+        })
         return Response.json(
             {
                 message: "Message deleted successfully",

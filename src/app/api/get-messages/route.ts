@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import { auth } from "../auth/[...nextauth]/auth";
 import userModel from "@/models/user.model";
 import mongoose from "mongoose";
+import { log } from "console";
 
 export async function GET(req: Request) {
     await dbConnect();
@@ -13,7 +14,7 @@ export async function GET(req: Request) {
             { status: 401 }
         );
     }
-    const userId = user.id;
+    const userId = user._id;
     try {
         const foundUser = await userModel.aggregate([
             {
@@ -30,7 +31,7 @@ export async function GET(req: Request) {
                 },
             },
             {
-                $unwind: "$messsages",
+                $unwind: "$messages",
             },
             {
                 $sort: {
@@ -46,10 +47,18 @@ export async function GET(req: Request) {
                 },
             },
         ]);
-        if (!foundUser || foundUser.length === 0) {
+        console.log("foundUser: ", foundUser);
+        
+        if (!foundUser) {
             return Response.json(
                 { success: false, message: "User not found" },
                 { status: 404 }
+            );
+        }
+        if(foundUser.length === 0) {
+            return Response.json(
+                { success: true, messages: [] },
+                { status: 200 }         
             );
         }
         return Response.json(

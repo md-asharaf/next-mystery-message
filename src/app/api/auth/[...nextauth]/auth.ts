@@ -16,23 +16,17 @@ export const authOptions: NextAuthConfig = {
             authorize: async ({ email, password }): Promise<any> => {
                 await dbConnect();
                 try {
-                    const user = await userModel.findOne(
-                        { email },
-                        { isVerified: true }
-                    );
-                    // if (!user) {
-                    //     throw new Error(
-                    //         "User does not exist or did not verify their email."
-                    //     );
-                    // }
+                    const user= await userModel.findOne({ email });
+                    if (!user?.isVerified) {
+                        return null;
+                    }
                     const isPasswordCorrect = await bcrypt.compare(
                         password as string,
                         user?.password || ""
                     );
                     return isPasswordCorrect ? user : null;
                 } catch (error: any) {
-                    console.log("in authorize error: ", error);
-                    // throw new Error(error);
+                    return null;
                 }
             },
         }),
@@ -42,7 +36,7 @@ export const authOptions: NextAuthConfig = {
             if (user) {
                 token._id = user._id?.toString(); // Convert ObjectId to string
                 token.isVerified = user.isVerified;
-                token.isAcceptingMessages = user.isAcceptingMessages;
+                token.isAcceptingMessage = user.isAcceptingMessage;
                 token.username = user.username;
             }
             return token;
@@ -51,7 +45,7 @@ export const authOptions: NextAuthConfig = {
             if (token) {
                 session.user._id = token._id;
                 session.user.isVerified = token.isVerified;
-                session.user.isAcceptingMessages = token.isAcceptingMessages;
+                session.user.isAcceptingMessage = token.isAcceptingMessage;
                 session.user.username = token.username;
             }
             return session;

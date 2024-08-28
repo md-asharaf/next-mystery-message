@@ -17,7 +17,7 @@ export default function RootLayout({
         <html lang="en">
             <Provider>
                 <body className={inter.className}>
-                    <NavBar />
+                    <div className="h-20"><NavBar /></div>
                     {children}
                     <Toaster />
                 </body>

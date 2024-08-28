@@ -1,4 +1,4 @@
-"use server";
+"use server"
 import { signIn,signOut } from "@/app/api/auth/[...nextauth]/auth";
 
 export async function signInHelper(data:{email:string,password:string}){
@@ -8,7 +8,7 @@ export async function signInHelper(data:{email:string,password:string}){
             ...data
         });
     }catch(error:any){
-        console.log("SIGN IN HELPER ERROR: ",error);
+        throw error;
     }
 }
 

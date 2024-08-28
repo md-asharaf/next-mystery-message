@@ -57,7 +57,6 @@ export default function SignUp(){
     const { mutate: onSubmit, isPending: isSubmitting } = useMutation({
         mutationKey: ["sign-up"],
         mutationFn: async (data: z.infer<typeof SignUpSchema>) => {
-            console.log(data);
             try {
                 await axios.post("/api/sign-up", data);
                 toast({

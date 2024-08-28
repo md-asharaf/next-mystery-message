@@ -46,9 +46,7 @@ export async function GET(req: Request) {
                     },
                 },
             },
-        ]);
-        console.log("foundUser: ", foundUser);
-        
+        ]);        
         if (!foundUser) {
             return Response.json(
                 { success: false, message: "User not found" },

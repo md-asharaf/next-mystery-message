@@ -69,7 +69,6 @@ const Page = () => {
     }, []);
     const startCountdown = async () => {
         const interval = setInterval(() => {
-            console.log("in time interval");
             setTimer((prev) => {
                 if (prev === 0) {
                     clearInterval(interval);

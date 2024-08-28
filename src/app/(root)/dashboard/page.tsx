@@ -63,7 +63,7 @@ export default function DashBoard() {
                     "Failed to fetch message settings",
                 variant: "destructive",
             });
-        }finally{
+        } finally {
             return null;
         }
     };
@@ -78,7 +78,7 @@ export default function DashBoard() {
             setValue("acceptMessage", !acceptMessage);
             toast({
                 title: "Success",
-                description:"Message settings updated successfully",
+                description: "Message settings updated successfully",
                 variant: "default",
             });
         } catch (error) {
@@ -108,13 +108,11 @@ export default function DashBoard() {
             mutationFn: toggleAcceptMessage,
         });
     if (isLoading) {
-        return <Loader2 className="animate-spin h-6 w-6 mx-auto mt-10"/>;
+        return <Loader2 className="animate-spin h-6 w-6 mx-auto mt-10" />;
     }
     return (
         <div className="mt-10 max-w-[90%] sm:max-w-[75%]  space-y-4 mx-auto">
-            <h1 className="text-4xl font-bold">
-                User Dashboard
-            </h1>
+            <h1 className="text-4xl font-bold">User Dashboard</h1>
             <div>
                 <div className="ml-4 mb-2">Copy Your Unique Link</div>
                 <div className="flex">
@@ -134,22 +132,26 @@ export default function DashBoard() {
                     onCheckedChange={() => handleSwitchChange()}
                     disabled={isSwitchLoading}
                 />
-                <div>
-                    Accept Messages: {acceptMessage ? "On" : "Off"}
-                </div>
+                <div>Accept Messages: {acceptMessage ? "On" : "Off"}</div>
             </div>
-            <button onClick={() => refetch()} className="px-2 py-1 bg-white shadow rounded">
-                <RefreshCw className={`${isLoading&&"animate-spin"}`} />
+            <button
+                onClick={() => refetch()}
+                className="px-2 py-1 bg-white shadow rounded"
+            >
+                <RefreshCw className={`${isLoading && "animate-spin"}`} />
             </button>
             <div className="flex flex-1">
                 {messages?.map((message) => (
-                    <div key={message._id as string} className="w-full lg:w-1/2">
+                    <div
+                        key={message._id as string}
+                        className="w-full lg:w-1/2"
+                    >
                         <MessageCard
                             message={message}
                             onDelete={deleteMessage}
                         />
-                        </div>
-                    ))}
+                    </div>
+                ))}
             </div>
         </div>
     );

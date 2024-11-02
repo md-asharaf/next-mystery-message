@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { IMessage } from "@/models/message.model";
 import { useToast } from "./ui/use-toast";
-import axios, { Axios, AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 interface MessageCardProps {
     message: IMessage;

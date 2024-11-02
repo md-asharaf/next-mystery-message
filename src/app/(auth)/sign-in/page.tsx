@@ -36,6 +36,7 @@ export default function SignIn(){
         try {
             await signInHelper(data);
             router.replace("/dashboard");
+            router.refresh();
         } catch (error:any) {
             console.log("ERROR: ",error)
             toast({

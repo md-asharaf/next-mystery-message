@@ -12,6 +12,7 @@ export default function NavBar(){
         try {
             await signOutHelper();
             router.replace("/sign-in");
+            router.refresh();
         } catch (error:any) {
             console.log("Error ", error.message);
         }
@@ -19,7 +20,7 @@ export default function NavBar(){
     return (
         <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white fixed w-full top-0 h-20">
             <div className="container mx-auto flex justify-between items-center">
-                <a href="#" className="text-xl font-bold mb-4 md:mb-0">
+                <a href="/" className="text-xl font-bold mb-4 md:mb-0">
                     Mystery Message
                 </a>
                 {user ? (

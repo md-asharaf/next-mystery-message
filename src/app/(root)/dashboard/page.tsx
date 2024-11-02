@@ -103,12 +103,15 @@ export default function DashBoard() {
         enabled: !!user?._id,
     });
     const { mutate: handleSwitchChange, isPending: isSwitchLoading } =
-        useMutation({
-            mutationKey: ["accept-message", user?._id],
-            mutationFn: toggleAcceptMessage,
-        });
+    useMutation({
+        mutationKey: ["accept-message", user?._id],
+        mutationFn: toggleAcceptMessage,
+    });
     if (isLoading) {
         return <Loader2 className="animate-spin h-6 w-6 mx-auto mt-10" />;
+    }
+    if(!user){
+        return null;
     }
     return (
         <div className="mt-10 max-w-[90%] sm:max-w-[75%]  space-y-4 mx-auto">
@@ -117,6 +120,7 @@ export default function DashBoard() {
                 <div className="ml-4 mb-2">Copy Your Unique Link</div>
                 <div className="flex">
                     <input
+
                         value={uniqueLink}
                         disabled
                         type="text"

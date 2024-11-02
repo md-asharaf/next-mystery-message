@@ -15,7 +15,7 @@ const client = new QueryClient({
 });
 const Provider = ({ children }: { children: React.ReactNode }) => {
     return (
-        <SessionProvider>
+        <SessionProvider >
             <QueryClientProvider client={client}>
                 {children}
             </QueryClientProvider>

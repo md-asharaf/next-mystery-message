@@ -2,8 +2,6 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,13 +16,13 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { signInHelper } from "../../../lib/auth_helpers";
 import { AuthError } from "next-auth";
-
+import { useState } from "react";
+import { signIn } from "next-auth/react"
 export default function SignIn(){
-    const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { toast } = useToast();
-    const register = useForm<z.infer<typeof SignInSchema>>({
+    const form = useForm<z.infer<typeof SignInSchema>>({
         resolver: zodResolver(SignInSchema),
         defaultValues: {
             email: "",
@@ -34,21 +32,22 @@ export default function SignIn(){
 
     const signin=async (data: z.infer<typeof SignInSchema>) => {
         try {
-            await signInHelper(data);
-            router.replace("/dashboard");
-            router.refresh();
+            setIsSubmitting(true);
+            signIn("credentials", {
+                ...data,
+                redirect: true,
+                redirectTo:"/"
+            })
         } catch (error:any) {
             console.log("ERROR: ",error)
             toast({
                 title: "Sign in failed",
                 description: error instanceof AuthError ? error.message : "wrong credentials,check your email and password",
             })
+        }finally{
+            setIsSubmitting(false);
         }
     }
-    const { mutate: onSubmit, isPending: isSubmitting } = useMutation({
-        mutationKey: ["sign-in"],
-        mutationFn: signin,
-    });
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-800">
             <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
@@ -60,16 +59,14 @@ export default function SignIn(){
                         sign in to start your anonymous adventure
                     </p>
                 </div>
-                <Form {...register}>
+                <Form {...form}>
                     <form
-                        onSubmit={register.handleSubmit((data) =>
-                            onSubmit(data)
-                        )}
+                        onSubmit={form.handleSubmit(signin)}
                         className="space-y-6"
                     >
                         <FormField
                             name="email"
-                            control={register.control}
+                            control={form.control}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
@@ -88,7 +85,7 @@ export default function SignIn(){
 
                         <FormField
                             name="password"
-                            control={register.control}
+                            control={form.control}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
@@ -106,7 +103,7 @@ export default function SignIn(){
                         <Button
                             type="submit"
                             className="w-full"
-                            // disabled={isSubmitting}
+                            disabled={isSubmitting}
                         >
                             {isSubmitting ? (
                                 <>
@@ -116,6 +113,7 @@ export default function SignIn(){
                             ) : (
                                 "Sign in"
                             )}
+
                         </Button>
                     </form>
                 </Form>

@@ -1,22 +1,11 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import {useRouter} from "next/navigation"
-import { signOutHelper } from "@/lib/auth_helpers";
 import { useSession } from "next-auth/react";
-export default function NavBar(){
-    const router=useRouter();
-    const {data:session} = useSession();
-    const user=session?.user;
-    const signout = async () => {
-        try {
-            await signOutHelper();
-            router.replace("/sign-in");
-            router.refresh();
-        } catch (error:any) {
-            console.log("Error ", error.message);
-        }
-    }
+import { signOut } from "next-auth/react";
+export default function NavBar() {
+    const { data: session } = useSession();
+    const user = session?.user;
     return (
         <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white fixed w-full top-0 h-20">
             <div className="container mx-auto flex justify-between items-center">
@@ -24,13 +13,18 @@ export default function NavBar(){
                     Mystery Message
                 </a>
                 {user ? (
-                        <Button
-                            onClick={signout}
-                            className="w-auto bg-slate-100 text-black"
-                            variant="outline"
-                        >
-                            Sign out
-                        </Button>
+                    <Button
+                        onClick={() =>
+                            signOut({
+                                redirect: true,
+                                redirectTo: "/sign-in",
+                            })
+                        }
+                        className="w-auto bg-slate-100 text-black"
+                        variant="outline"
+                    >
+                        Sign out
+                    </Button>
                 ) : (
                     <Link href="/sign-in">
                         <Button
@@ -44,4 +38,4 @@ export default function NavBar(){
             </div>
         </nav>
     );
-};
+}

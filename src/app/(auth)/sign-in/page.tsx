@@ -16,10 +16,12 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { AuthError } from "next-auth";
 import { useState } from "react";
-import { signIn } from "next-auth/react"
-export default function SignIn(){
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+export default function SignIn() {
+    const [error, setError] = useState("");
+    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { toast } = useToast();
     const form = useForm<z.infer<typeof SignInSchema>>({
@@ -30,27 +32,32 @@ export default function SignIn(){
         },
     });
 
-    const signin=async (data: z.infer<typeof SignInSchema>) => {
+    const signin = async (data: z.infer<typeof SignInSchema>) => {
         try {
+            setError("");
             setIsSubmitting(true);
-            signIn("credentials", {
+            const result = await signIn("credentials", {
                 ...data,
-                redirect: true,
-                redirectTo:"/"
-            })
-        } catch (error:any) {
-            console.log("ERROR: ",error)
-            toast({
-                title: "Sign in failed",
-                description: error instanceof AuthError ? error.message : "wrong credentials,check your email and password",
-            })
-        }finally{
+                redirect: false,
+            });
+            if (result?.error) {
+                setError("Wrong credentials, Invalid email or password");
+            } else {
+                router.push("/");
+                toast({
+                    title: "Sign in successful",
+                    description: "You have been signed in",
+                });
+            }
+        } catch (error: any) {
+            console.log("ERROR: ", error);
+        } finally {
             setIsSubmitting(false);
         }
-    }
+    };
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-800">
-            <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+        <div className="flex-grow flex items-center justify-center bg-gray-800">
+            <div className="max-w-md p-8 space-y-8 rounded-lg shadow-md bg-white text-black">
                 <div className="text-center">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
                         Join Mystery Message
@@ -58,6 +65,9 @@ export default function SignIn(){
                     <p className="mb-4">
                         sign in to start your anonymous adventure
                     </p>
+                    {error && (
+                        <div className="text-red-500 rounded-md">{error}</div>
+                    )}
                 </div>
                 <Form {...form}>
                     <form
@@ -113,7 +123,6 @@ export default function SignIn(){
                             ) : (
                                 "Sign in"
                             )}
-
                         </Button>
                     </form>
                 </Form>
@@ -131,4 +140,4 @@ export default function SignIn(){
             </div>
         </div>
     );
-};
+}

@@ -17,6 +17,7 @@ import { IMessage } from "@/models/message.model";
 import { useToast } from "./ui/use-toast";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
+import React from "react";
 interface MessageCardProps {
     message: IMessage;
     onDelete: (messageId: string) => void;

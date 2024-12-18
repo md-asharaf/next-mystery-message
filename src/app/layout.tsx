@@ -15,14 +15,19 @@ export default function RootLayout({
     return (
         <html lang="en">
             <Provider>
-                <body className={inter.className + " h-screen flex flex-col"}>
-                    <div className="h-20">
+                <body
+                    className={inter.className + " min-h-screen flex flex-col"}
+                >
+                    <div className="h-[52px] sm:h-[68px]">
                         <NavBar />
                     </div>
-                    <div className="flex-grow">{children}</div>
-                    <footer className="h-10 text-center p-4 md:p-6 bg-gray-900 text-white">
-                        © 2023 True Feedback. All rights reserved.
+                    {children}
+                    <footer className="h-[24px] sm:h-[40px]">
+                        <div className="fixed bottom-0 w-full text-center sm:p-2 bg-gray-900 text-white z-20">
+                            © 2023 True Feedback. All rights reserved.
+                        </div>
                     </footer>
+
                     <Toaster />
                 </body>
             </Provider>

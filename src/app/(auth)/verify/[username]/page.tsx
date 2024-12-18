@@ -10,7 +10,7 @@ const Page = () => {
     const [OTP, setOTP] = useState("");
     const [res, setRes] = useState({
         success: true,
-        message: "email sent successfully!",
+        message: "Email sent successfully!",
     });
     const [isResending, setIsResending] = useState(false);
     const [timer, setTimer] = useState(120);
@@ -79,47 +79,47 @@ const Page = () => {
         }, 1000);
     };
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-                <div className="text-center">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-                        Verify Your Account
-                    </h1>
-                    <p className="mb-4">
-                        Enter the verification code sent to your email
-                    </p>
-                </div>
-                <p
-                    className={`${
-                        res.success ? "text-green-500" : "text-red-500"
-                    }`}
-                >
-                    {res.message}
-                </p>
-                <div className="space-y-6">
-                    <Input onChange={(e) => setOTP(e.target.value)} />
-                    <Button onClick={verifyOtp} disabled={OTP == ""}>
-                        Verify
-                    </Button>
-                    <Button
-                        onClick={resendEmail}
-                        variant={"outline"}
-                        disabled={timer > 0}
-                        className="ml-2"
+            <div className="flex-grow flex justify-center items-center bg-gray-800">
+                <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+                    <div className="text-center">
+                        <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
+                            Verify Your Account
+                        </h1>
+                        <p className="mb-4">
+                            Enter the verification code sent to your email
+                        </p>
+                    </div>
+                    <p
+                        className={`${
+                            res.success ? "text-green-500" : "text-red-500"
+                        }`}
                     >
-                        {isResending ? (
-                            <>
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                            </>
-                        ) : timer ? (
-                            `${timer} s`
-                        ) : (
-                            "Resend Email"
-                        )}
-                    </Button>
+                        {res.message}
+                    </p>
+                    <div className="space-y-6">
+                        <Input onChange={(e) => setOTP(e.target.value)} />
+                        <Button onClick={verifyOtp} disabled={OTP == ""}>
+                            Verify
+                        </Button>
+                        <Button
+                            onClick={resendEmail}
+                            variant={"outline"}
+                            disabled={timer > 0}
+                            className="ml-2"
+                        >
+                            {isResending ? (
+                                <>
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                </>
+                            ) : timer ? (
+                                `${timer} s`
+                            ) : (
+                                "Resend Email"
+                            )}
+                        </Button>
+                    </div>
                 </div>
             </div>
-        </div>
     );
 };
 

@@ -8,6 +8,8 @@ import {
     Section,
     Text,
 } from "@react-email/components";
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
 
 interface VerificationEmailProps {
     username: string;
@@ -53,14 +55,13 @@ export default function VerificationEmail({
                         email.
                     </Text>
                 </Row>
-                {/* <Row>
-            <Button
-              href={`http://localhost:3000/verify/${username}`}
-              style={{ color: '#61dafb' }}
-            >
-              Verify here
-            </Button>
-          </Row> */}
+                <Row>
+                    <Link href={`http://localhost:3000/verify/${username}`}>
+                        <Button style={{ color: '#61dafb' }}>
+                            Verify here
+                        </Button>
+                    </Link>
+          </Row>
             </Section>
         </Html>
     );

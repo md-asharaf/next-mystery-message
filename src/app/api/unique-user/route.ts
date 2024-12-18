@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/user.model";
 import { UsernameSchema } from "@/validation/signUpSchema";
+export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
     await dbConnect();
     try {

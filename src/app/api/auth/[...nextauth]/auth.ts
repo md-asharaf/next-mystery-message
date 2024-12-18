@@ -5,6 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthConfig = {
+    trustHost: process.env.NODE_ENV === "production",
     providers: [
         Credentials({
             id: "credentials",

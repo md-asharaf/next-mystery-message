@@ -18,15 +18,6 @@ export async function POST(req: Request) {
                 { status: 404 }
             );
         }
-        if (!existingUser.isAcceptingMessages) {
-            return Response.json(
-                {
-                    success: false,
-                    message: "User is not accepting message",
-                },
-                { status: 403 }
-            );
-        }
         // create a message in database and push it to the user's messages array
         const newMessage = await messageModel.create({
             content,

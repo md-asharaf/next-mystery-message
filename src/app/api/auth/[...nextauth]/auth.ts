@@ -34,7 +34,7 @@ export const authOptions: NextAuthConfig = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token._id = user._id?.toString(); // Convert ObjectId to string
+                token._id = user._id?.toString();
                 token.isVerified = user.isVerified;
                 token.isAcceptingMessage = user.isAcceptingMessage;
                 token.username = user.username;

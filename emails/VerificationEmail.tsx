@@ -56,7 +56,7 @@ export default function VerificationEmail({
                     </Text>
                 </Row>
                 <Row>
-                    <Link href={`${process.env.NEXT_AUTH_URL}/verify/${username}`}>
+                    <Link href={`${process.env.NEXTAUTH_URL}/verify/${username}`}>
                         <Button style={{ color: '#61dafb' }}>
                             Verify here
                         </Button>

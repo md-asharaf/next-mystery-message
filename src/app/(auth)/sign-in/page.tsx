@@ -40,7 +40,6 @@ export default function SignIn() {
                 ...data,
                 redirect: false
             });
-            console.log("RESULT: ", result);
             if (result?.error) {
                 setError("Wrong credentials, Invalid email or password");
             } else {

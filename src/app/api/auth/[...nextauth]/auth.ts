@@ -16,7 +16,7 @@ export const authOptions: NextAuthConfig = {
             authorize: async ({ email, password }): Promise<any> => {
                 await dbConnect();
                 try {
-                    const user= await userModel.findOne({ email });
+                    const user = await userModel.findOne({ email });
                     if (!user?.isVerified) {
                         return null;
                     }
@@ -43,14 +43,16 @@ export const authOptions: NextAuthConfig = {
         },
         async session({ session, token }) {
             if (token) {
-                session.user._id = token._id;
-                session.user.isVerified = token.isVerified;
-                session.user.isAcceptingMessage = token.isAcceptingMessage;
-                session.user.username = token.username;
+                session.user._id = token._id as string;
+                session.user.isVerified = token.isVerified as boolean;
+                session.user.isAcceptingMessage =
+                    token.isAcceptingMessage as boolean;
+                session.user.username = token.username as string;
             }
             return session;
         },
     },
+    trustHost: true,
     session: {
         strategy: "jwt",
     },

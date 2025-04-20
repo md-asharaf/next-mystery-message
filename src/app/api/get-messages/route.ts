@@ -2,7 +2,6 @@ import dbConnect from "@/lib/dbConnect";
 import { auth } from "../auth/[...nextauth]/auth";
 import userModel from "@/models/user.model";
 import mongoose from "mongoose";
-import { log } from "console";
 
 export async function GET(req: Request) {
     await dbConnect();

@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.pathname;
     const isAuth = !!token;
     if (
-        isAuth &&         
+        isAuth &&
         (url.startsWith("/sign-in") ||
             url.startsWith("/sign-up") ||
             url.startsWith("/verify"))
@@ -23,5 +23,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/", "/dashboard","/sign-in", "/sign-up", "/verify"],
+    matcher: ["/", "/dashboard", "/sign-in", "/sign-up", "/verify"],
 };

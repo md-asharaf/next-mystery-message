@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import UserModel from "@/models/user.model";
 import { sendVerificationEmail } from "@/lib/resend";
 

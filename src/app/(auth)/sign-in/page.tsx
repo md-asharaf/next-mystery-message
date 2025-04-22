@@ -43,6 +43,7 @@ export default function SignIn() {
             if (result?.error) {
                 setError("Wrong credentials, Invalid email or password");
             } else {
+                router.refresh()
                 router.push("/");
                 toast({
                     title: "Sign in successful",

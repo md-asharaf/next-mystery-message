@@ -77,7 +77,7 @@ export default function SignUp() {
     });
     useEffect(() => {
         checkUsername();
-    }, [username]);
+    }, [username,checkUsername]);
     return (
         <div className="flex-grow flex items-center justify-center bg-gray-800">
             <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">

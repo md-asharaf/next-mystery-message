@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(request: NextRequest) {
     const token = await getToken({
         req: request,
+        secret:process.env.NEXTAUTH_SECRET,
+        cookieName: "__Secure-authjs.session-token"
     });
     const url = request.nextUrl.pathname;
     console.log({

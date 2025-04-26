@@ -26,7 +26,7 @@ export default function SendMessage() {
     const [isUserAcceptingMessages, setIsUserAcceptingMessages] =
         useState(false);
     const { username } = useParams();
-
+    const [isLoading, setIsLoading] = useState(false);
     const form = useForm<z.infer<typeof MessageSchema>>({
         resolver: zodResolver(MessageSchema),
     });
@@ -60,6 +60,7 @@ export default function SendMessage() {
 
     useEffect(() => {
         const isAcceptingMessages = async () => {
+            setIsLoading(true);
             try {
                 const res = await axios.get(`/api/accept-message/`);
                 setIsUserAcceptingMessages(res.data?.isAcceptingMessages);
@@ -68,23 +69,30 @@ export default function SendMessage() {
                     "Error checking if user is accepting messages: ",
                     error.message
                 );
+            } finally {
+                setIsLoading(false);
             }
         };
         isAcceptingMessages();
     }, []);
-
+    if (isLoading) {
+        return (
+                <div className="flex flex-col items-center justify-center h-screen">
+                    <Loader2 className="animate-spin h-8 w-8" />
+                </div>
+        );
+    }
     return (
         <div className="flex-grow">
             <div className="border-[1px] p-4 rounded-lg shadow-xl relative max-w-lg mx-auto mt-20 space-y-4">
-                <h1 className="text-2xl font-bold text-center">
-                    Send Message Anonymously
-                </h1>
-
                 {!isUserAcceptingMessages ? (
                     <div className="text-center text-red-600">
                         <p>This user is currently not accepting messages.</p>
                     </div>
-                ) : (
+                ) : (<>
+                    <h1 className="text-2xl font-bold text-center">
+                        Send Message Anonymously
+                    </h1>
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit((data) =>
@@ -138,6 +146,7 @@ export default function SendMessage() {
                             </Button>
                         </form>
                     </Form>
+                </>
                 )}
             </div>
         </div>

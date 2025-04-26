@@ -8,6 +8,7 @@ export async function middleware(request: NextRequest) {
     });
     const url = request.nextUrl.pathname;
     console.log({
+        ccokies: request.cookies.getAll(),
         token,
         url,
     });

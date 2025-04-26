@@ -77,7 +77,7 @@ export default function SignUp() {
     });
     useEffect(() => {
         checkUsername();
-    }, [username,checkUsername]);
+    }, [username]);
     return (
         <div className="flex-grow flex items-center justify-center bg-gray-800">
             <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
@@ -112,12 +112,11 @@ export default function SignUp() {
                                     )}
                                     {!isCheckingUsername && userMessage && (
                                         <p
-                                            className={`text-s.min(6, "Password must be at least 6 characters long")m ${
-                                                userMessage ===
-                                                "username is unique"
+                                            className={`text-s.min(6, "Password must be at least 6 characters long")m ${userMessage ===
+                                                    "username is unique"
                                                     ? "text-green-500"
                                                     : "text-red-500"
-                                            }`}
+                                                }`}
                                         >
                                             {userMessage}
                                         </p>

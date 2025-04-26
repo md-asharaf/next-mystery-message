@@ -12,15 +12,21 @@ export async function POST(req: Request) {
             $or: [{ username }, { email }],
         });
         //if user exists and verified
-        if (existingUser && existingUser.isVerified) {
-            //send failed response
-            return Response.json(
-                {
-                    success: false,
-                    message: "User already exists with this email or username",
-                },
-                { status: 400 }
-            );
+        if (existingUser) {
+            if (!existingUser.isVerified) {
+                //delete from db
+                await UserModel.deleteOne({ _id: existingUser._id });
+            } else {
+                //send failed response
+                return Response.json(
+                    {
+                        success: false,
+                        message:
+                            "User already exists with this email or username",
+                    },
+                    { status: 400 }
+                );
+            }
         }
         //generate otp and hashed password
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -44,16 +50,8 @@ export async function POST(req: Request) {
             await existingUser.save();
         }
         //send verification email
-        const emailSent = await sendVerificationEmail(email, username, otp);
-        //if email sending failed
-        if (!emailSent?.success) {
-            console.log("Error in sending email: ", emailSent?.message);
-            // send failed response
-            return Response.json(
-                { success: false, message: emailSent.message },
-                { status: 500 }
-            );
-        }
+        const { message } = await sendVerificationEmail(email, username, otp);
+        console.log(message);
         //send success response
         return Response.json(
             { success: true, message: "user registered" },

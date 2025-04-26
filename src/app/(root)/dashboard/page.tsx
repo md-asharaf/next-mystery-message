@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AcceptMessageSchema } from "@/validation/AcceptMessageSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 export default function DashBoard() {
     const [uniqueLink, setUniqueLink] = useState("");
@@ -166,16 +167,18 @@ export default function DashBoard() {
                         Accept Messages: {acceptMessage ? "On" : "Off"}
                     </div>
                 </div>
-                <button
+                <div className="flex items-center space-x-4"><Button
+                    variant="secondary"
                     onClick={() => refetch()}
-                    className="px-2 py-1 bg-white shadow rounded flex items-center"
+                    className="px-2 py-1 bg-white shadow flex items-center"
                 >
                     <RefreshCw
-                        className={`${
-                            isFetching ? "animate-spin" : ""
-                        } w-5 h-5`}
+                        className={`${isFetching ? "animate-spin" : ""
+                            } w-5 h-5`}
                     />
-                </button>
+                </Button>
+                    <Badge className="text-center px-2 py-1">{`${messages.length || 0} messages`}</Badge>
+                </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                     {messages?.map((message) => (
                         <div key={message.id}>

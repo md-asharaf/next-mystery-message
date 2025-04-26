@@ -7,9 +7,9 @@ import {
     Row,
     Section,
     Text,
+    Link,
+    Button,
 } from "@react-email/components";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 interface VerificationEmailProps {
     username: string;
@@ -56,7 +56,7 @@ export default function VerificationEmail({
                     </Text>
                 </Row>
                 <Row>
-                    <Link href={`${process.env.NEXTAUTH_URL}/verify/${username}`}>
+                    <Link href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/verify/${username}`}>
                         <Button style={{ color: '#61dafb' }}>
                             Verify here
                         </Button>

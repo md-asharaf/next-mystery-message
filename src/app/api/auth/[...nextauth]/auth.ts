@@ -24,7 +24,15 @@ export const authOptions: NextAuthConfig = {
                         password as string,
                         user?.password || ""
                     );
-                    return isPasswordCorrect ? user : null;
+                    return isPasswordCorrect
+                        ? {
+                              _id: user._id,
+                              email: user.email,
+                              username: user.username,
+                              isVerified: user.isVerified,
+                              isAcceptingMessage: user.isAcceptingMessages,
+                          }
+                        : null;
                 } catch (error: any) {
                     return null;
                 }
